@@ -7,6 +7,9 @@ include LICENSE
 # Include configuration files
 recursive-include jepa/config *.yaml *.yml
 
+# Include preset specs
+recursive-include jepa_tools/presets *.yaml
+
 # Include the typed marker
 include jepa/py.typed
 

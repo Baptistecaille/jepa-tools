@@ -22,11 +22,7 @@ try:  # Progress bar support
 except ImportError:  # pragma: no cover - tqdm is optional at runtime
     tqdm = None  # type: ignore
 
-try:  # Optional dependency for HuggingFace compatibility
-    from transformers import PreTrainedModel
-except ImportError:  # pragma: no cover - transformers is optional
-    PreTrainedModel = None  # type: ignore
-
+from ..models.jepa import _is_hf_model
 from ..loggers import create_logger, BaseLogger, WandbLogger
 from ..loss_functions import mse_loss
 
@@ -116,7 +112,7 @@ class JEPATrainer:
             self.world_size = 1
         self.dist_backend = dist_backend
         self.sync_batchnorm = sync_batchnorm
-        self.is_hf_model = bool(PreTrainedModel and isinstance(model, PreTrainedModel))
+        self.is_hf_model = _is_hf_model(model)
         if loss_fn is None and not self.is_hf_model:
             self.loss_fn = mse_loss
         else:

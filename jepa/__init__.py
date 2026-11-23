@@ -82,7 +82,7 @@ __all__ = [
     'Encoder',
     'Predictor',
     'JEPAAction',
-    'JEPAInterleavedAction',
+    'JEPAInterleaved',
     
     # Training
     'JEPATrainer',

@@ -7,12 +7,21 @@ from typing import Dict, Any, Optional, Union
 
 from .base_logger import BaseLogger
 
-try:
-    import wandb
-    WANDB_AVAILABLE = True
-except ImportError:
-    WANDB_AVAILABLE = False
-    wandb = None
+wandb = None  # loaded lazily by _load_wandb()
+_WANDB_CHECKED = False
+
+
+def _load_wandb() -> bool:
+    """Import wandb on first use. Returns True if it is available."""
+    global wandb, _WANDB_CHECKED
+    if not _WANDB_CHECKED:
+        _WANDB_CHECKED = True
+        try:
+            import wandb as _wandb
+            wandb = _wandb
+        except ImportError:
+            wandb = None
+    return wandb is not None
 
 
 class WandbLogger(BaseLogger):
@@ -125,4 +134,4 @@ class WandbLogger(BaseLogger):
     
     def is_available(self) -> bool:
         """Check if wandb is available."""
-        return WANDB_AVAILABLE
+        return _load_wandb()

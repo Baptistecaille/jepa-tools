@@ -9,7 +9,6 @@ from torch.utils.data import DataLoader as TorchDataLoader, Dataset, Sampler
 from torch.utils.data.sampler import WeightedRandomSampler
 from typing import Dict, List, Tuple, Optional, Union, Any, Callable
 import numpy as np
-import matplotlib.pyplot as plt
 from collections import Counter
 import os
 import json

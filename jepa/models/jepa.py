@@ -1,14 +1,17 @@
+import sys
 import torch
 import torch.nn as nn
 from typing import Optional, Tuple, Any
 from collections.abc import Mapping
 
-try:  # Optional dependency for HuggingFace compatibility
-    from transformers import PreTrainedModel
-except ImportError:  # pragma: no cover - transformers is optional
-    PreTrainedModel = None  # type: ignore
-
 from .base import BaseModel
+
+
+def _is_hf_model(module) -> bool:
+    """True if ``module`` is a HuggingFace PreTrainedModel (never imports transformers)."""
+    tf = sys.modules.get("transformers")
+    pretrained = getattr(tf, "PreTrainedModel", None) if tf is not None else None
+    return bool(pretrained and isinstance(module, pretrained))
 
 
 class JEPA(BaseModel):
@@ -51,7 +54,7 @@ class JEPA(BaseModel):
         )
 
     def _is_hf_module(self, module: nn.Module) -> bool:
-        return bool(PreTrainedModel and isinstance(module, PreTrainedModel))
+        return _is_hf_model(module)
 
     def _encode_state(self, *inputs: Any, **kwargs: Any) -> torch.Tensor:
         encoded = self.encoder(*inputs, **kwargs)

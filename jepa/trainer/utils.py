@@ -5,7 +5,6 @@ Utility functions for JEPA training and evaluation.
 import torch
 import torch.nn as nn
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import Dict, List, Any, Optional
 import json
 import os
@@ -39,6 +38,8 @@ def plot_training_history(history: Dict[str, List[float]], save_path: Optional[s
         history: Dictionary with training metrics over time
         save_path: Optional path to save the plot
     """
+    import matplotlib.pyplot as plt  # optional dependency, loaded on demand
+
     fig, axes = plt.subplots(1, len(history), figsize=(5 * len(history), 4))
     if len(history) == 1:
         axes = [axes]

@@ -8,12 +8,21 @@ from typing import Dict, Any, Optional, Union
 
 from .base_logger import BaseLogger
 
-try:
-    from torch.utils.tensorboard import SummaryWriter
-    TENSORBOARD_AVAILABLE = True
-except ImportError:
-    TENSORBOARD_AVAILABLE = False
-    SummaryWriter = None
+SummaryWriter = None  # loaded lazily by _load_summary_writer()
+_TB_CHECKED = False
+
+
+def _load_summary_writer() -> bool:
+    """Import TensorBoard's SummaryWriter on first use. Returns True if available."""
+    global SummaryWriter, _TB_CHECKED
+    if not _TB_CHECKED:
+        _TB_CHECKED = True
+        try:
+            from torch.utils.tensorboard import SummaryWriter as _SW
+            SummaryWriter = _SW
+        except ImportError:
+            SummaryWriter = None
+    return SummaryWriter is not None
 
 
 class TensorBoardLogger(BaseLogger):
@@ -132,4 +141,4 @@ class TensorBoardLogger(BaseLogger):
     
     def is_available(self) -> bool:
         """Check if TensorBoard is available."""
-        return TENSORBOARD_AVAILABLE
+        return _load_summary_writer()

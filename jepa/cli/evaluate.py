@@ -13,7 +13,6 @@ import json
 import numpy as np
 from pathlib import Path
 from typing import Dict, Any, Optional, Callable
-import matplotlib.pyplot as plt
 
 # Package imports - use relative imports for proper package structure
 from ..config.config import load_config
@@ -278,6 +277,8 @@ def analyze_latent_space(embeddings, output_dir):
 
 def create_visualizations(results, output_dir):
     """Create visualization plots."""
+    import matplotlib.pyplot as plt  # optional dependency, loaded on demand
+
     print("Creating visualizations...")
     
     predictions = results['predictions']

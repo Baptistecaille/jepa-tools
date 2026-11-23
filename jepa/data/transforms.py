@@ -5,14 +5,36 @@ Provides various data augmentation and preprocessing transforms that can be used
 with JEPA datasets to improve model robustness and performance.
 """
 
+from __future__ import annotations
+
 import torch
 import torch.nn as nn
-import torchvision.transforms as transforms
-import torchvision.transforms.functional as F
 from typing import Tuple, List, Optional, Union, Callable, Any
+import importlib
 import random
 import numpy as np
-from PIL import Image
+
+
+class _LazyModule:
+    """Import an optional dependency on first attribute access."""
+
+    def __init__(self, name: str, extra: str = "vision"):
+        self._name = name
+        self._extra = extra
+
+    def __getattr__(self, attr: str):
+        try:
+            module = importlib.import_module(self._name)
+        except ImportError as exc:
+            raise ImportError(
+                f"{self._name} is required for this feature: pip install 'jepa[{self._extra}]'"
+            ) from exc
+        return getattr(module, attr)
+
+
+transforms = _LazyModule("torchvision.transforms")
+F = _LazyModule("torchvision.transforms.functional")
+Image = _LazyModule("PIL.Image")
 
 
 class JEPATransforms:
