@@ -24,3 +24,5 @@ class Objective(nn.Module):
     @property
     def has_regularizer(self) -> bool:
         return self.regularizer.active
+
+    
