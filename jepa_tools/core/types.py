@@ -14,8 +14,8 @@ from torch import LongTensor, Tensor
 class Plan:
     """Produced by a Sampler."""
 
-    ctx_inputs: Tensor  # what the context encoder sees
-    tgt_inputs: Tensor  # what the target sees (may be identical to ctx_inputs)
+    ctx_inputs: Tensor          # what the context encoder sees
+    tgt_inputs: Tensor          # what the target sees (may be identical to ctx_inputs)
     ctx_idx: LongTensor | None  # (B, Nc) visible context tokens, None = all
     tgt_idx: LongTensor | None  # (B, Nt) tokens to predict, None = all
 
