@@ -1,10 +1,13 @@
-import torch
-import torch.nn.functional as F
-from typing import Callable, Type
+from __future__ import annotations
 
-# import personnal classes
-from .distances import *
-from .regularizers import *
+import torch
+import torch.nn as nn
+
+from jepa_tools.core import registry
+from jepa_tools.core.types import StepOutputs
+
+# Importing the modules runs their @register decorators.
+from . import distances, regularizers  # noqa: F401
 
 class Objective(nn.Module):
 
@@ -17,9 +20,14 @@ class Objective(nn.Module):
     
     def forward(self, out: StepOutputs) -> tuple[torch.Tensor, dict[str, float]]:
         distance_loss = self.distance(out.pred, out.target)
-        regularizer_loss = self.regularizer(out.emb)
-        total_loss = self.distance_weight * distance_loss + self.regularizer_weight * regularizer_loss
-        return total_loss
+        regularizer_loss = self.regularizer(out)
+        loss = self.distance_weight * dist + self.reg_weight * reg
+        logs = {
+            "loss": loss.detach().item(),
+            "distance": dist.detach().item(),
+            "reg": reg.detach().item(),
+        }
+        return loss, logs
 
     @property
     def has_regularizer(self) -> bool:
