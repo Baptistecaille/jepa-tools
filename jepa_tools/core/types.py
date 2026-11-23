@@ -28,3 +28,4 @@ class StepOutputs:
     target: Tensor  # (B, Nt, D)
     emb: Tensor  # (B, Nc, D) online context embeddings
     progress: float  # 0 to 1, for schedules
+

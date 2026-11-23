@@ -57,3 +57,13 @@ class SmoothL1(BaseDistance):
     def __call__(self, pred, target) -> float:
         _check_shapes(pred, target)
         return F.smooth_l1_loss(pred, target, beta=self.beta).item()
+
+@register_distance("cosine")
+class Cosine(BaseDistance):
+
+    """Cosine distance metric."""
+    name = "cosine"
+
+    def __call__(self, pred, target) -> float:
+        _check_shapes(pred, target)
+        return (1.0 - F.cosine_similarity(pred, target, dim=-1)).mean().item()
